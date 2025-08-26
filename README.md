@@ -1,12 +1,37 @@
-# React + Vite
+# 🕌 Prayer Times Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple and responsive website that displays daily prayer times.  
+Built with **React (or Vite + React)** and deployed on **Netlify**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
+- 📅 Shows daily prayer times (Fajr, Dhuhr, Asr, Maghrib, Isha).
+- 🌍 Supports different cities / countries.
+- 📱 Responsive design (mobile-friendly).
+- ⏰ Highlights the next upcoming prayer.
+- 🌙 Islamic-themed UI.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Live Demo
+🔗 [View Website on Netlify](https://your-site-name.netlify.app)
+
+---
+
+## 🛠️ Technologies Used
+- **React / Vite**
+- **JavaScript (ES6+)**
+- **CSS / Tailwind (if you used it)**
+- **Netlify** for hosting
+
+---
+
+## 📦 Installation
+Clone the repository and install dependencies:
+
+```bash
+git clone https://github.com/your-username/prayer-times.git
+cd prayer-times
+npm install
+npm run dev
