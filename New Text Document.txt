@@ -1,0 +1,158 @@
+import React, { useState, useEffect } from 'react'
+import Grid from '@mui/material/Grid';
+import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
+import PrayerCard from './PrayerCard';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import axios from 'axios';
+import moment from "moment";
+
+export default function MainContent() {
+
+    const cityes = [
+      {
+        name:"القاهرة",
+        api:"Cairo"
+      },
+
+      {
+        name:"المنيا",
+        api:"Minya"
+      },
+    ]
+
+    const [city, setCity] = useState({
+        name:"القاهرة",
+        api:"Cairo"
+      })
+    const handleChange = (event) => {
+
+      const selectedCity = cityes.find((city) => {
+        return city.api == event.target.value;
+      })
+
+      setCity(selectedCity)
+  };
+
+  const cityesList= cityes.map((c) => {
+    return(
+      <MenuItem value={c.api}>{c.name}</MenuItem>
+    )
+  })
+
+  const [timings, setTimings] = useState(
+    {
+      Fajr:"",
+      Dhuhr:"",
+      Asr:"",
+      Sunset:"",
+      Isha:""
+    }
+  )
+
+  const [today, setToday] = useState("")
+
+
+
+    const fetchPrayerTimes = async (city) => {
+    try {
+      const res = await axios.get(
+        `https://api.aladhan.com/v1/timingsByCity?country=EG&city=${city}`
+      );
+      setTimings(res.data.data.timings);
+    } catch (err) {
+      console.error("Error fetching prayer times:", err);
+    }
+  };
+
+    useEffect(() => {
+    fetchPrayerTimes(city.api);
+
+    const t = moment();
+    setToday(t.format("L | hh:mm"))
+  }, [city]); // Runs when city changes
+
+  useEffect(() => {
+
+    let interval = setInterval(() => {
+
+      handleNextPrayer()
+      
+    }, 1000);
+
+    return () => {
+      clearInterval(interval)
+    }
+
+  },[])
+
+  const handleNextPrayer = () => {
+    console.log("hello from next prayer function" + timings)
+
+    const momentNow = moment();
+
+    if (
+			momentNow.isAfter(moment(timings["Asr"], "hh:mm")) &&
+			momentNow.isBefore(moment(timings["Sunset"], "hh:mm"))
+		)
+    {
+      console.log("before Maghrib")
+    }
+
+  }
+
+
+  return (
+    <>
+        <Grid container spacing={2}>
+            <Grid size={6}>
+                <div style={{textAlign:"center"}}>
+                    <h3 style={{direction:"ltr"}}>{today}</h3>
+                    <h2>{city.name}</h2>
+                </div>
+            </Grid>
+
+            <Grid size={6}>
+                <div style={{textAlign:"center"}}>
+                    <h3 style={{direction:"ltr"}}>04 : 45 : 28</h3>
+                    <h2>متبقي حتى صلاة الفجر</h2>
+                </div>
+            </Grid>
+        </Grid>
+
+        {/* divider */}
+        <Divider variant="full" style={{borderColor:"white", opacity:"0.3"}}/>
+        {/* divider */}
+
+        {/* Prayer Cards */}
+        <Stack direction="row" justifyContent={"center"}  flexWrap={'wrap'} style={{marginTop:"40px"}}>
+        <PrayerCard name="الفجر" time={timings.Fajr} image="/images/Fajr.png"/>
+        <PrayerCard name="الظهر" time={timings.Dhuhr} image="/images/Dhuhr.png"/>
+        <PrayerCard name="العصر" time={timings.Asr} image="/images/Asr.png"/>
+        <PrayerCard name="المغرب" time={timings.Maghrib} image="/images/Maghrib.png"/>
+        <PrayerCard name="العشاء" time={timings.Isha} image="/images/Isha.png"/>
+        </Stack>
+        {/* Prayer Cards */}
+
+
+        <div style={{display:"flex",justifyContent:"center", alignItems:"center" ,marginTop:"50px", marginBottom:"20px"}}>
+            <FormControl style={{ width:"20%"}}>
+        <InputLabel id="demo-simple-select-label">المدينة</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={city.name}
+          label="المدينة"
+          onChange={handleChange}
+        >
+          {cityesList}
+        </Select>
+      </FormControl>
+        </div>
+
+        </>
+  )
+}
